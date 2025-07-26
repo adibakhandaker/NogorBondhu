@@ -13,5 +13,8 @@
     "express": "^5.1.0",
     "ws": "^8.18.3"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@ljharb/tsconfig": "^0.3.2"
+  }
 }
