@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>সার্ভিস সমূহ</title>
+  <link rel="stylesheet" href="style.css" />
+ <link rel="manifest" href="/manifest.json"> 
+ <meta name="theme-color" content="#D32F2F">
+ <link rel="icon" href="/icons/icon-192x192.png">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+      .catch(err => console.warn('❌ Service Worker failed:', err));
+  }
+</script>
+
+</head>
+<body>
+  <div class="container">
+
+    <a href="bike-ride map.html" class="card">
+      <img src="icons/Bike Ride.png" alt="Bike Icon" />
+      <div class="info">
+        <h2>বাইক রাইড</h2>
+        <small>Bike Service</small>
+        <p>দ্রুত এবং সাশ্রয়ী বাইক রাইড</p>
+      </div>
+    </a>
+
+    <a href="school-pickup.html" class="card">
+      <img src="icons/School PickUp.png" alt="School Pickup Icon" />
+      <div class="info">
+        <h2>স্কুল পিকআপ</h2>
+        <small>School Drop Off</small>
+        <p>নিরাপদ স্কুল যাতায়াত সেবা</p>
+      </div>
+    </a>
+
+    <a href="inter-city.html" class="card">
+      <img src="icons/Inter City Ride.png" alt="Intercity Ride Icon" />
+      <div class="info">
+        <h2>শহরের বাইরে</h2>
+        <small>Inter-city Service</small>
+        <p>শহরের বাইরে যাওয়ার সেবা</p>
+      </div>
+    </a>
+
+    <a href="food-delivery.html" class="card">
+      <img src="icons/Food Delevery.png" alt="Food Delivery Icon" />
+      <div class="info">
+        <h2>খাবার ডেলিভারি</h2>
+        <small>Food Delivery</small>
+        <p>প্রিয় রেস্তোরাঁ থেকে খাবার অর্ডার করুন</p>
+      </div>
+    </a>
+
+    <a href="grocery.html" class="card">
+      <img src="icons/Basket.png" alt="Grocery Basket Icon" />
+      <div class="info">
+        <h2>গ্রোসারি ডেলিভারি</h2>
+        <small>Grocery Delivery</small>
+        <p>দৈনন্দিন প্রয়োজনীয় জিনিস অর্ডার করুন</p>
+      </div>
+    </a>
+
+    <a href="caregiver-nanny.html" class="card">
+      <img src="icons/Caregiver-Nanny.png" alt="Caregiver Icon" />
+      <div class="info">
+        <h2>কেয়ারগিভার/ন্যানি</h2>
+        <small>Caregiver Service</small>
+        <p>বয়স্ক বা অসুস্থ এবং ছোট বাচ্চাদের জন্য সহায়তাকারী সেবা</p>
+      </div>
+    </a>
+
+    <a href="others.html" class="card">
+      <img src="icons/others.png" alt="Other Service Icon" />
+      <div class="info">
+        <h2>অন্যান্য সেবা</h2>
+        <small>Other Services</small>
+        <p>বিভিন্ন অতিরিক্ত সেবাসমূহ</p>
+      </div>
+    </a>
+
+  </div>
+</body>
+</html>

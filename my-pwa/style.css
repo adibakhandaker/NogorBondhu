@@ -1,0 +1,261 @@
+body {
+  font-family: sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.icon {
+  font-size: 36px;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.info h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.info small {
+  font-size: 13px;
+  color: #666;
+}
+
+.info p {
+  font-size: 14px;
+  margin-top: 6px;
+  color: #333;
+}
+.card img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  background: linear-gradient(to right, #D32F2F, #C2185B);
+  color: white;
+  padding: 20px;
+}
+
+.logo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+
+.home-container h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.home-container p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.enter-btn {
+  padding: 12px 24px;
+  background: white;
+  color: #D32F2F;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.enter-btn:hover {
+  background: #fce4ec;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  background: #f4f4f4;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  width: 70%;
+  max-width: 250px;
+  background: linear-gradient(to bottom, #ff0000, #a00000);
+  color: white;
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: -100%;
+  transition: left 0.3s ease;
+  padding: 20px 10px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar h2 {
+  margin-bottom: 10px;
+}
+
+.sidebar hr {
+  width: 80%;
+  margin: 15px 0;
+  border: 1px solid white;
+}
+
+.sidebar a {
+  margin: 10px 0;
+}
+
+.sidebar img {
+  width: 40px;
+  height: 40px;
+  filter: brightness(0) invert(1);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 500;
+  display: none;
+}
+
+.header {
+  background: linear-gradient(to right, #ff0000, #b10000);
+  color: white;
+  padding: 20px;
+  position: relative;
+}
+
+.menu-toggle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+}
+
+.profile-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+}
+
+.greeting {
+  margin-top: 60px;
+  font-size: 1rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.gif-container {
+  background: white;
+  margin: 20px;
+  padding: 40px;
+  border: 2px solid black;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.services-section {
+  background: white;
+  margin: 20px;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.services-section h3 {
+  margin-bottom: 10px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.service-box {
+  height: 70px;
+  border: 4px solid black;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 1px solid #ccc;
+  z-index: 999;
+}
+
+.nav-icon {
+  font-size: 0.9rem;
+}
+
+
+

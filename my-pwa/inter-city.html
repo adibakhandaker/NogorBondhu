@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>নগরবন্ধু - ইন্টার-সিটি রাইড</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      width: 280px;
+    }
+    #controls input, button {
+      width: 100%;
+      margin: 5px 0;
+      padding: 6px 8px;
+      box-sizing: border-box;
+    }
+    ul.suggestions {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      background: white;
+      border: 1px solid #ccc;
+      max-height: 160px;
+      overflow-y: auto;
+      position: absolute;
+      z-index: 10000;
+      width: 100%;
+    }
+    ul.suggestions li {
+      padding: 8px;
+      cursor: pointer;
+    }
+    ul.suggestions li:hover {
+      background: #f0f0f0;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+    }
+    .closeBtn {
+      float: right;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <a href="index.html">← হোমে ফিরে যান</a><br />
+    <button id="locateBtn">📍 আপনার লোকেশন</button>
+
+    <label>👤 নাম:</label>
+    <input type="text" id="name" placeholder="নাম" />
+    <label>📞 ফোন নম্বর:</label>
+    <input type="tel" id="phone" placeholder="ফোন নম্বর" />
+
+    <label>Pickup:</label>
+    <div style="position: relative;">
+      <input type="text" id="pickup" placeholder="Pickup Location" autocomplete="off" />
+      <ul id="pickupSuggestions" class="suggestions"></ul>
+      <button id="pickupMapBtn">📌 ম্যাপে Pickup দিন</button>
+    </div>
+
+    <label>Dropoff:</label>
+    <div style="position: relative;">
+      <input type="text" id="dropoff" placeholder="Dropoff Location" autocomplete="off" />
+      <ul id="dropoffSuggestions" class="suggestions"></ul>
+      <button id="dropoffMapBtn">📌 ম্যাপে Dropoff দিন</button>
+    </div>
+
+    <button id="bookBtn">✅ রাইড কনফার্ম করুন</button>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="fareModal" class="modal">
+    <div class="modal-content">
+      <span class="closeBtn">&times;</span>
+      <h3>💰 ভাড়া বিবরণ</h3>
+      <div id="fareDetails"></div>
+      <button id="confirmBookingBtn">বুকিং নিশ্চিত করুন</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+
+  <script>
+    const map = L.map("map").setView([23.607, 89.842], 8);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    let pickupCoord = null;
+    let dropoffCoord = null;
+    let routingControl = null;
+    let calculatedFare = 0;
+
+    let settingPickupFromMap = false;
+    let settingDropoffFromMap = false;
+
+    document.getElementById("pickupMapBtn").addEventListener("click", () => {
+      settingPickupFromMap = true;
+      settingDropoffFromMap = false;
+      alert("📍 ম্যাপে ক্লিক করে Pickup লোকেশন দিন");
+    });
+
+    document.getElementById("dropoffMapBtn").addEventListener("click", () => {
+      settingPickupFromMap = false;
+      settingDropoffFromMap = true;
+      alert("📍 ম্যাপে ক্লিক করে Dropoff লোকেশন দিন");
+    });
+
+    map.on("click", function (e) {
+      const latlng = e.latlng;
+      if (settingPickupFromMap) {
+        pickupCoord = [latlng.lat, latlng.lng];
+        document.getElementById("pickup").value = `🗺 কাস্টম লোকেশন (${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)})`;
+        settingPickupFromMap = false;
+      }
+      if (settingDropoffFromMap) {
+        dropoffCoord = [latlng.lat, latlng.lng];
+        document.getElementById("dropoff").value = `🗺 কাস্টম লোকেশন (${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)})`;
+        settingDropoffFromMap = false;
+      }
+    });
+
+    function setupAutocomplete(inputId, suggestionListId, setCoord) {
+      const input = document.getElementById(inputId);
+      const suggestionList = document.getElementById(suggestionListId);
+
+      input.addEventListener("input", () => {
+        const query = input.value.trim();
+        if (query.length < 3) {
+          suggestionList.innerHTML = "";
+          suggestionList.style.display = "none";
+          return;
+        }
+
+        fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&lat=23.607&lon=89.842`)
+          .then((res) => res.json())
+          .then((data) => {
+            const features = data.features || [];
+            showSuggestions(features.map(f => ({
+              name: [f.properties.name, f.properties.city, f.properties.country].filter(Boolean).join(", "),
+              lat: f.geometry.coordinates[1],
+              lon: f.geometry.coordinates[0],
+            })));
+          });
+
+        function showSuggestions(locations) {
+          suggestionList.innerHTML = "";
+          locations.forEach((loc) => {
+            const li = document.createElement("li");
+            li.textContent = loc.name;
+            li.addEventListener("click", () => {
+              input.value = loc.name;
+              setCoord([loc.lat, loc.lon]);
+              suggestionList.innerHTML = "";
+              suggestionList.style.display = "none";
+              map.setView([loc.lat, loc.lon], 14);
+            });
+            suggestionList.appendChild(li);
+          });
+          suggestionList.style.display = "block";
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (e.target !== input && e.target.parentNode !== suggestionList) {
+          suggestionList.style.display = "none";
+        }
+      });
+    }
+
+    setupAutocomplete("pickup", "pickupSuggestions", (coords) => { pickupCoord = coords; });
+    setupAutocomplete("dropoff", "dropoffSuggestions", (coords) => { dropoffCoord = coords; });
+
+    document.getElementById("locateBtn").addEventListener("click", () => {
+      map.locate({ setView: true, maxZoom: 15 });
+    });
+
+    map.on("locationfound", (e) => {
+      L.marker(e.latlng).addTo(map).bindPopup("আপনি এখানে!").openPopup();
+    });
+
+    document.getElementById("bookBtn").addEventListener("click", () => {
+      if (!pickupCoord || !dropoffCoord) {
+        alert("Pickup এবং Dropoff লোকেশন নির্বাচন করুন");
+        return;
+      }
+
+      if (routingControl) {
+        map.removeControl(routingControl);
+      }
+
+      routingControl = L.Routing.control({
+        waypoints: [L.latLng(pickupCoord), L.latLng(dropoffCoord)],
+        routeWhileDragging: false,
+        draggableWaypoints: false,
+        createMarker: () => null,
+      })
+        .on("routesfound", (e) => {
+          const route = e.routes[0];
+          const distanceKm = route.summary.totalDistance / 1000;
+          const timeMin = Math.ceil(route.summary.totalTime / 60);
+
+          const baseFare = 300;
+          const perKmRate = 24;
+          const waitingRate = 3;
+          const oneWaySurcharge = 13;
+          const cancelFee = 100;
+
+          calculatedFare = Math.round(
+            baseFare + distanceKm * perKmRate + timeMin * waitingRate + oneWaySurcharge
+          );
+
+          document.getElementById("fareDetails").innerHTML = `
+            <p>📍 <strong>দূরত্ব:</strong> ${distanceKm.toFixed(2)} কিমি</p>
+            <p>🕒 <strong>সময়:</strong> ${timeMin} মিনিট</p>
+            <hr />
+            <p>মূল ভাড়া: ৳${baseFare}</p>
+            <p>দূরত্ব (${distanceKm.toFixed(2)} × ৳${perKmRate}) = ৳${(distanceKm * perKmRate).toFixed(2)}</p>
+            <p>সময় (${timeMin} × ৳${waitingRate}) = ৳${(timeMin * waitingRate).toFixed(2)}</p>
+            <p>একমুখী সারচার্জ: ৳${oneWaySurcharge}</p>
+            <hr />
+            <h4>📦 মোট ভাড়া: ৳${calculatedFare}</h4>
+            <p style="color: gray; font-size: 0.9em;">🚫 ক্যানসেল করলে চার্জ: ৳${cancelFee}</p>
+          `;
+          document.getElementById("fareModal").style.display = "block";
+        })
+        .addTo(map);
+    });
+
+    document.querySelector(".closeBtn").onclick = () => {
+      document.getElementById("fareModal").style.display = "none";
+    };
+
+    window.onclick = function (event) {
+      const modal = document.getElementById("fareModal");
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
+
+    document.getElementById("confirmBookingBtn").addEventListener("click", () => {
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const pickup = document.getElementById("pickup").value.trim();
+      const dropoff = document.getElementById("dropoff").value.trim();
+
+      if (!name || !phone || !pickup || !dropoff) {
+        alert("সকল তথ্য পূরণ করুন");
+        return;
+      }
+
+      const scriptURL = "https://script.google.com/macros/s/AKfycbwmMUB1eLtRuxR4N5gGEZyiLLHPXks_7t4d6Hl640Zh6EvEh8nZ1cABCEjX8rhrrvtIrg/exec";
+
+      const data = { name, phone, pickup, dropoff, fare: calculatedFare };
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.status === "success") {
+            alert("✅ রাইড সফলভাবে বুক করা হয়েছে!");
+            document.getElementById("fareModal").style.display = "none";
+            document.getElementById("name").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("pickup").value = "";
+            document.getElementById("dropoff").value = "";
+            pickupCoord = null;
+            dropoffCoord = null;
+            if (routingControl) {
+              map.removeControl(routingControl);
+              routingControl = null;
+            }
+          } else {
+            alert("❌ কিছু ভুল হয়েছে: " + response.message);
+          }
+        })
+        .catch((error) => {
+          alert("❌ নেটওয়ার্ক সমস্যা হয়েছে");
+          console.error(error);
+        });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NogorBondhu Homepage</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #e53935;
+      color: white;
+      height: 100vh;
+      position: fixed;
+      left: -200px;
+      top: 0;
+      transition: left 0.3s ease;
+      padding-top: 60px;
+      z-index: 1000;
+    }
+
+    .sidebar.show {
+      left: 0;
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      padding: 15px 20px;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .sidebar a:hover {
+      background-color: #d32f2f;
+    }
+
+    .hamburger {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 30px;
+      background-color: #e53935;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 1100;
+      cursor: pointer;
+    }
+
+    .main {
+      margin-left: 0;
+      padding: 20px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .sidebar.show ~ .main {
+      margin-left: 200px;
+    }
+
+    .header {
+      background-color: #e53935;
+      color: white;
+      padding: 30px 20px 10px;
+      text-align: center;
+    }
+
+    .header p {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .gif-section {
+      background-color: #fff;
+      margin: 20px;
+      padding: 40px;
+      text-align: center;
+      border-radius: 10px;
+      border: 2px dashed #ccc;
+    }
+
+    .services {
+      margin: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .services h2 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .service-card {
+      background-color: #f4f4f4;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .service-card img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+    }
+
+    .service-card h3 {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    .service-card h3 span {
+      display: block;
+      font-weight: normal;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .service-card p {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+}
+
+.footer-icon {
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.footer-icon:hover {
+  color: #1e90ff;
+}
+.intro-gif {
+  width: 150px;       /* smaller width */
+  height: auto;       /* maintain aspect ratio */
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+
+    @media (max-width: 600px) {
+      .service-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sidebar {
+        width: 180px;
+        left: -180px;
+      }
+
+      .sidebar.show {
+        left: 0;
+      }
+
+      .sidebar.show ~ .main {
+        margin-left: 180px;
+      }
+    }
+  </style>
+  <link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icons/icon-192x192.png" />
+<link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+<meta name="theme-color" content="#D32F2F" />
+
+</head>
+<body>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+  <div class="sidebar" id="sidebarMenu">
+
+  <!-- WhatsApp (opens chat) -->
+  <a href="https://wa.me/+8801335120073" target="_blank">WhatsApp</a>
+
+  <!-- Facebook (your profile/page link) -->
+  <a href="https://www.facebook.com/yourusername" target="_blank">Facebook</a>
+
+  <!-- Web (your website) -->
+  <a href="https://nogorbondhu.ct.ws" target="_blank">Web</a>
+
+  <!-- Phone (tap to call) -->
+  <a href="tel:+8801335120073">Phone</a>
+
+  <!-- Email (opens default email app) -->
+  <a href="mailto:nogorbondhu07@gmail.com">Email</a>
+</div>
+
+
+  <div class="main">
+    <div class="header">
+      <p>Welcome to NogorBondhu</p>
+    </div>
+
+    <div class="gif-section">
+       <img src="icons/intro.gif" alt="Intro GIF" class="intro-gif" />
+    </div>
+
+   <div class="services">
+  <h2>Our Services:</h2>
+  <div class="service-grid">
+
+    <a href="bike-ride map.html" class="service-card">
+      <img src="icons/Bike Ride.png" alt="Bike Icon" />
+      <h3>বাইক রাইড<br><span>Bike Ride</span></h3>
+      <p>দ্রুত এবং সাশ্রয়ী বাইক রাইড</p>
+    </a>
+
+    <a href="inter-city.html" class="service-card">
+      <img src="icons/Inter City Ride.png" alt="Intercity Ride Icon" />
+      <h3>শহরের বাইরে<br><span>Intercity</span></h3>
+      <p>শহরের বাইরে যাওয়ার সেবা</p>
+    </a>
+
+    <a href="grocery.html" class="service-card">
+      <img src="icons/Basket.png" alt="Grocery Basket Icon" />
+      <h3>গ্রোসারি ডেলিভারি<br><span>Grocery Delivery</span></h3>
+      <p>প্রয়োজনীয় জিনিস অর্ডার করুন</p>
+    </a>
+
+    <a href="school-pickup.html" class="service-card">
+      <img src="icons/School PickUp.png" alt="School Pickup Icon" />
+      <h3>স্কুল পিকআপ<br><span>School Pickup</span></h3>
+      <p>নিরাপদ স্কুল যাতায়াত সেবা</p>
+    </a>
+
+    <a href="food-delivery.html" class="service-card">
+      <img src="icons/Food Delevery.png" alt="Food Delivery Icon" />
+      <h3>খাবার ডেলিভারি<br><span>Food Delivery</span></h3>
+      <p>রেস্টোরাঁ থেকে খাবার অর্ডার করুন</p>
+    </a>
+
+    <a href="caregiver-nanny.html" class="service-card">
+      <img src="icons/Caregiver-Nanny.png" alt="Caregiver Icon" />
+      <h3>কেয়ারগিভার/ন্যানি<br><span>Caregiver/Nanny</span></h3>
+      <p>শিশু ও প্রবীণদের সহায়তাকারী</p>
+    </a>
+
+  </div>
+</div>
+
+  <script>
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebarMenu');
+      sidebar.classList.toggle('show');
+    }
+  </script>
+</body>
+</html>

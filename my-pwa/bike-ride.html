@@ -1,0 +1,156 @@
+<!-- bike-ride.html -->
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>বাইক রাইড সার্ভিস</title>
+  <style>
+    body {
+      font-family: "Noto Sans Bengali", sans-serif;
+      padding: 30px;
+      background-color: #f8f9fa;
+      max-width: 600px;
+      margin: auto;
+      line-height: 1.6;
+    }
+    h1 { color: #1c7ed6; }
+    label { margin-top: 12px; display: block; font-weight: bold; }
+    input {
+      padding: 8px; width: 100%; margin-top: 4px; margin-bottom: 12px;
+      border: 1px solid #ccc; border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px; background-color: #339af0; color: white;
+      border: none; border-radius: 6px; cursor: pointer; font-size: 16px;
+    }
+    button:hover { background-color: #228be6; }
+    .result {
+      margin-top: 20px; font-size: 20px; font-weight: bold; color: #2f9e44;
+    }
+    a {
+      display: inline-block; margin-top: 30px;
+      text-decoration: none; color: #1c7ed6;
+    }
+  </style>
+</head>
+<body>
+  <h1>বাইক রাইড সার্ভিস</h1>
+  <p>আপনার যাত্রার দূরত্ব এও অপেক্ষার সময় লিখে মোট ভাড়া জেনে নিন।</p>
+
+  <label for="distance">দূরত্ব (কিমি):</label>
+  <input type="number" id="distance" placeholder="যেমন়\u09fঃ ৫" step="0.1" />
+
+  <label for="waiting">অপেক্ষার সময় (মিনিট):</label>
+  <input type="number" id="waiting" placeholder="যেমন়ঃ ৫" step="1" />
+
+  <button onclick="calculateFare()">ভাড়া হিসাব করুন</button>
+
+  <div class="result" id="fareResult"></div>
+  <a href="index.html">← হোমে ফিরে যান</a>
+
+  <script>
+    function calculateFare() {
+      const distance = parseFloat(document.getElementById("distance").value);
+      const waiting = parseInt(document.getElementById("waiting").value) || 0;
+
+      const baseFare = 20, perKm = 10, perMinute = 0.5;
+
+      if (isNaN(distance) || distance <= 0) {
+        document.getElementById("fareResult").textContent = "সঠিক দূরত্ব লিখুন।";
+        return;
+      }
+
+      const fare = baseFare + (distance * perKm) + (waiting * perMinute);
+      const total = Math.round(fare);
+
+      document.getElementById("fareResult").textContent = `আপনার মোট ভাড়া: Tk ${total}`;
+    }
+  </script>
+</body>
+</html>
+
+
+<!-- bike-ride-map.html -->
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NogorBondhu Ride Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    html, body, #map { height: 100%; margin: 0; padding: 0; }
+    #controls, #riderDetails {
+      position: absolute; background: white; padding: 10px;
+      border-radius: 5px; z-index: 1000;
+    }
+    #controls { top: 10px; left: 10px; }
+    #riderDetails { bottom: 10px; left: 10px; }
+    button { margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <button id="locateBtn">আপনার লোকেশন দেখুন</button><br />
+    Pickup: <input type="text" id="pickup" placeholder="Pick-up address" /><br />
+    Drop: <input type="text" id="drop" placeholder="Drop-off address" /><br />
+    <button id="bookBtn">Book Ride</button>
+  </div>
+  <div id="map"></div>
+  <div id="riderDetails"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([23.59419, 89.82147], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    document.getElementById('locateBtn').addEventListener('click', () => {
+      map.locate({ setView: true, maxZoom: 16 });
+    });
+    map.on('locationfound', e => {
+      L.marker(e.latlng).addTo(map).bindPopup('আপনি এখানে!').openPopup();
+    });
+    map.on('locationerror', e => { alert('লোকেশন পাওয়া যায়নি'); });
+
+    document.getElementById('bookBtn').onclick = () => {
+      const p = document.getElementById('pickup').value;
+      const d = document.getElementById('drop').value;
+      if (!p || !d) return alert('দয়া করে উভয় ঠিকানা দিন');
+      alert(`Booking ride:\nPickup: ${p}\nDrop: ${d}`);
+    };
+
+    // Live WebSocket rider updates
+    const socket = new WebSocket('ws://localhost:8081');
+    let riderMarker = null;
+
+    socket.addEventListener('open', () => {
+      console.log('Connected to backend WebSocket');
+    });
+
+    socket.addEventListener('message', event => {
+      const data = JSON.parse(event.data);
+      const rider = data.riderInfo;
+      if (rider) {
+        const { lat, lng } = rider.location;
+        if (riderMarker) {
+          riderMarker.setLatLng([lat, lng]);
+        } else {
+          riderMarker = L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup(`রাইডার: ${rider.name}`)
+            .openPopup();
+        }
+        document.getElementById("riderDetails").innerHTML = `
+          <strong>👤 ${rider.name}</strong><br/>
+          📞 ${rider.phone}<br/>
+          📍 ${lat.toFixed(5)}, ${lng.toFixed(5)}
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
