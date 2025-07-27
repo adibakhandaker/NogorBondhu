@@ -27,6 +27,8 @@ my-pwa/
 ---
 
 ## 👩‍💻 About the Author
+Adiba Khandaker
+
 
 **Adiba Khandaker**
 
