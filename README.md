@@ -21,18 +21,15 @@
 my-pwa/
 ├── index.html
 ├── styles.css
-├── scripts.js
-├── assets/
+├── icons
 └── README.md
 ---
 
 ## 👩‍💻 About the Author
-Adiba Khandaker
-
 
 **Adiba Khandaker**
 
-- 🇧🇩 Based in Bangladesh  
+-    Based in Bangladesh  
 - 💼 Computer Science Engineering Student  
 - 🔗 [GitHub Profile]((https://github.com/adibakhandaker)
 - 📫 Email: adibakhandaker5@gmail.com  
