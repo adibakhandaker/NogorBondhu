@@ -17,7 +17,7 @@ body {
   background: white;
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-decoration: none;
   color: inherit;
@@ -25,7 +25,7 @@ body {
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .icon {
@@ -55,6 +55,7 @@ body {
   margin-top: 6px;
   color: #333;
 }
+
 .card img {
   width: 50px;
   height: 50px;
@@ -104,6 +105,7 @@ body {
 .enter-btn:hover {
   background: #fce4ec;
 }
+
 * {
   margin: 0;
   padding: 0;
@@ -257,5 +259,190 @@ body {
   font-size: 0.9rem;
 }
 
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f1f1fa;
+}
+
+.header {
+  background: linear-gradient(to right, #c31432, #240b36);
+  height: 150px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  position: relative;
+}
+
+.user-icon {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background-color: white;
+  color: #333;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dots {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  font-size: 22px;
+  color: white;
+}
+.gif-container {
+  background: white;
+  margin: 20px;
+  padding: 40px;
+  border: 2px solid black;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f9f9f9;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #e53935;
+  color: white;
+  height: 100vh;
+  position: fixed;
+  left: -200px;
+  top: 0;
+  transition: left 0.3s ease;
+  padding-top: 60px;
+  z-index: 1000;
+}
+
+.sidebar.show {
+  left: 0;
+}
+
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 15px 20px;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.sidebar a:hover {
+  background-color: #d32f2f;
+}
+
+.hamburger {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 30px;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1100;
+  cursor: pointer;
+}
+
+.main {
+  margin-left: 0;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.show~.main {
+  margin-left: 200px;
+}
+
+.header {
+  background-color: #e53935;
+  color: white;
+  padding: 30px 20px 10px;
+  text-align: center;
+}
+
+.header p {
+  margin: 0;
+  font-size: 20px;
+}
+
+.services {
+  margin: 40px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 900px;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* 3 columns */
+  gap: 20px;
+  justify-items: center;
+}
+
+.service-card {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.service-card:hover {
+  transform: scale(1.05);
+}
+
+.service-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
 
 
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+}
+
+.footer-icon {
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.footer-icon:hover {
+  color: #1e90ff;
+}
+
+@media (max-width: 600px) {
+  .service-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sidebar {
+    width: 180px;
+    left: -180px;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .sidebar.show~.main {
+    margin-left: 180px;
+  }
+}
