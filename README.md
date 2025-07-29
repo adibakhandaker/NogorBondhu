@@ -3,7 +3,7 @@
 **NogorBondhu** is an inter-city ride booking web application tailored for Bangladesh, offering affordable and convenient bike and car rides between cities.
 
 ## 🚀 Live Demo
-[Try it out on Netlify]((https://subtle-bubblegum-254c46.netlify.app/)
+[Try it out on Netlify]((https://peaceful-panda-83691b.netlify.app/)
 
 ## 🛠️ Features
 - Search and select pickup and drop-off locations using Google Places Autocomplete
